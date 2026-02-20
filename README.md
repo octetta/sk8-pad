@@ -7,8 +7,11 @@
 # quick
 
 ```
-# install go and fyne
+# install go1.25.5 and fyne
+# go install fyne.io/tools/cmd/fyne@latest
 cd src
 make
 ./build/TARGET/sk8-pad
 ```
+
+<img src="docs/cap.png" width="500">
