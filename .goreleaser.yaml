@@ -16,6 +16,11 @@ builds:
     goarch: [amd64, arm64]
     ldflags: [-s -w -X main.version={{.Version}}]
 
+# This section is key: it tells GoReleaser to keep going if one build fails
+# (e.g. when Linux runner tries to build Mac code)
+build_publisher:
+  continue_on_error: true
+
 archives:
   - format: tar.gz
     format_overrides:

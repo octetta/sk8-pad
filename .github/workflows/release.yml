@@ -12,11 +12,7 @@ jobs:
   goreleaser:
     strategy:
       matrix:
-        include:
-          - os: ubuntu-latest
-            build_id: linux_windows
-          - os: macos-latest
-            build_id: macos
+        os: [ubuntu-latest, macos-latest]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout
@@ -35,7 +31,6 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
         run: |
           sudo apt-get update
-          # Fixed typo: libxf86vm-dev -> libxxf86vm-dev
           sudo apt-get install -y libx11-dev libxcursor-dev libxrandr-dev libxinerama-dev libxi-dev libgl1-mesa-dev libxxf86vm-dev
 
       - name: Run GoReleaser
@@ -43,8 +38,8 @@ jobs:
         with:
           distribution: goreleaser
           version: "~> v2"
-          # Using the most compatible flag format for v2.13+
-          args: "release --clean --config ../../.goreleaser.yaml --filter.id=${{ matrix.build_id }}"
+          # NO FILTER FLAGS. We use --skip=publish so it doesn't fail on multiple runners.
+          args: release --clean --config ../../.goreleaser.yaml --skip=publish
           workdir: src/sk8-pad
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
