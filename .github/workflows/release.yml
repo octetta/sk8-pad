@@ -14,9 +14,9 @@ jobs:
       matrix:
         include:
           - os: ubuntu-latest
-            goos: linux
+            cfg: ../../linux_win.goreleaser.yaml
           - os: macos-latest
-            goos: darwin
+            cfg: ../../macos.goreleaser.yaml
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout
@@ -42,9 +42,7 @@ jobs:
         with:
           distribution: goreleaser
           version: "~> v2"
-          # No fancy flags. We let GOOS do the filtering.
-          args: release --clean --config ../../.goreleaser.yaml --skip=publish --skip=validate
+          args: release --clean --config ${{ matrix.cfg }} --skip=publish
           workdir: src/sk8-pad
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GOOS: ${{ matrix.goos }} # This is the magic line
