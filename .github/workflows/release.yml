@@ -38,8 +38,8 @@ jobs:
         with:
           distribution: goreleaser
           version: "~> v2"
-          # NO FILTER FLAGS. We use --skip=publish so it doesn't fail on multiple runners.
-          args: release --clean --config ../../.goreleaser.yaml --skip=publish
+          # Using --skip=publish and --skip=validate so runners don't fight
+          args: release --clean --config ../../.goreleaser.yaml --skip=publish --skip=validate
           workdir: src/sk8-pad
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -4,22 +4,27 @@ project_name: sk8-pad
 builds:
   - id: linux_windows
     main: .
-    env: [CGO_ENABLED=1]
-    goos: [linux, windows]
-    goarch: [amd64]
-    ldflags: [-s -w -X main.version={{.Version}}]
+    env:
+      - CGO_ENABLED=1
+    goos:
+      - linux
+      - windows
+    goarch:
+      - amd64
+    ldflags:
+      - -s -w -X main.version={{.Version}}
 
   - id: macos
     main: .
-    env: [CGO_ENABLED=1]
-    goos: [darwin]
-    goarch: [amd64, arm64]
-    ldflags: [-s -w -X main.version={{.Version}}]
-
-# This section is key: it tells GoReleaser to keep going if one build fails
-# (e.g. when Linux runner tries to build Mac code)
-build_publisher:
-  continue_on_error: true
+    env:
+      - CGO_ENABLED=1
+    goos:
+      - darwin
+    goarch:
+      - amd64
+      - arm64
+    ldflags:
+      - -s -w -X main.version={{.Version}}
 
 archives:
   - format: tar.gz
