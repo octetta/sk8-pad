@@ -42,8 +42,7 @@ jobs:
         with:
           distribution: goreleaser
           version: "~> v2"
-          # Points to the config in the root relative to the workdir
-          args: release --clean --config ../../.goreleaser.yaml --id ${{ matrix.build_id }}
+          args: release --clean --config ../../.goreleaser.yaml --filter-id ${{ matrix.build_id }}
           workdir: src/sk8-pad
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
