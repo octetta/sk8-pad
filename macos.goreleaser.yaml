@@ -17,3 +17,20 @@ builds:
 archives:
   - name_template: "sk8-pad_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
     format: tar.gz
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - '^docs:'
+      - '^test:'
+  groups:
+    - title: 'New Features'
+      regexp: "^.*feat[(\\w)]*:+.*$"
+      order: 0
+    - title: 'Fixes'
+      regexp: "^.*fix[(\\w)]*:+.*$"
+      order: 1
+    - title: 'Build & CI'
+      regexp: "^.*build[(\\w)]*:+.*$"
+      order: 2

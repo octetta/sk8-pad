@@ -28,3 +28,20 @@ archives:
     format_overrides:
       - goos: windows
         format: zip
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - '^docs:'
+      - '^test:'
+  groups:
+    - title: 'New Features'
+      regexp: "^.*feat[(\\w)]*:+.*$"
+      order: 0
+    - title: 'Fixes'
+      regexp: "^.*fix[(\\w)]*:+.*$"
+      order: 1
+    - title: 'Build & CI'
+      regexp: "^.*build[(\\w)]*:+.*$"
+      order: 2

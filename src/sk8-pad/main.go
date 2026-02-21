@@ -64,7 +64,9 @@ func (e *HistoryEntry) TypedKey(k *fyne.KeyEvent) {
 	}
 	switch k.Name {
 	case fyne.KeyUp:
-		if e.pos == -1 { e.tempText = e.Text }
+		if e.pos == -1 {
+			e.tempText = e.Text
+		}
 		if e.pos < len(e.history)-1 {
 			e.pos++
 			e.SetText(e.history[len(e.history)-1-e.pos])
@@ -87,7 +89,7 @@ var version = "dev"
 
 func main() {
 	myApp := app.NewWithID("com.sk8r.pad")
-	w := myApp.NewWindow("SK8-PAD "+version)
+	w := myApp.NewWindow("SK8-PAD " + version)
 
 	var shortcutsOn bool
 	var fieldsVisible = true
@@ -102,7 +104,9 @@ func main() {
 	clearFocus := func() { w.Canvas().Focus(nil) }
 
 	sendUDP := func(msg string) {
-		if msg == "" { return }
+		if msg == "" {
+			return
+		}
 		connLock.Lock()
 		defer connLock.Unlock()
 		if conn != nil {
@@ -150,7 +154,9 @@ func main() {
 	adhocEntry.SetPlaceHolder("Ad-hoc (Enter to send, Up/Down for history)...")
 	adhocSend := func() {
 		txt := adhocEntry.Text
-		if txt == "" { return }
+		if txt == "" {
+			return
+		}
 		sendUDP(txt)
 		if len(adhocEntry.history) == 0 || adhocEntry.history[len(adhocEntry.history)-1] != txt {
 			adhocEntry.history = append(adhocEntry.history, txt)
@@ -172,7 +178,9 @@ func main() {
 			Dark: myApp.Settings().ThemeVariant() == theme.VariantDark,
 			Keys: shortcutsOn,
 		}
-		for _, e := range entries { cfg.Cmds = append(cfg.Cmds, e.Text) }
+		for _, e := range entries {
+			cfg.Cmds = append(cfg.Cmds, e.Text)
+		}
 		d, _ := json.Marshal(cfg)
 		_ = os.WriteFile(configFile, d, 0644)
 		reconnect(addrEntry.Text + ":" + portEntry.Text)
@@ -182,7 +190,7 @@ func main() {
 	}
 
 	saveBtn := widget.NewButtonWithIcon("", theme.DocumentSaveIcon(), func() { save(); clearFocus() })
-	
+
 	modeBtn := widget.NewButton("Keys: OFF", nil)
 	modeBtn.OnTapped = func() {
 		shortcutsOn = !shortcutsOn
@@ -199,29 +207,40 @@ func main() {
 	}
 
 	viewBtn := widget.NewButton("Text: ON", nil)
-	viewBtn.Importance = widget.HighImportance 
+	viewBtn.Importance = widget.HighImportance
 	viewBtn.OnTapped = func() {
 		fieldsVisible = !fieldsVisible
 		if fieldsVisible {
 			viewBtn.SetText("Text: ON")
 			viewBtn.Importance = widget.HighImportance
-			for _, e := range entries { e.Show() }
+			for _, e := range entries {
+				e.Show()
+			}
 			adhocBar.Show()
 		} else {
 			viewBtn.SetText("Text: OFF")
-			viewBtn.Importance = widget.WarningImportance 
-			for _, e := range entries { e.Hide() }
+			viewBtn.Importance = widget.WarningImportance
+			for _, e := range entries {
+				e.Hide()
+			}
 			adhocBar.Hide()
 		}
 		viewBtn.Refresh()
 	}
 
 	w.Canvas().SetOnTypedKey(func(k *fyne.KeyEvent) {
-		if k.Name == fyne.KeyEscape { clearFocus(); return }
-		if !shortcutsOn || w.Canvas().Focused() != nil { return }
+		if k.Name == fyne.KeyEscape {
+			clearFocus()
+			return
+		}
+		if !shortcutsOn || w.Canvas().Focused() != nil {
+			return
+		}
 		for idx, keyName := range keyMapping {
 			if string(k.Name) == keyName {
-				if buttons[idx].OnTapped != nil { buttons[idx].OnTapped() }
+				if buttons[idx].OnTapped != nil {
+					buttons[idx].OnTapped()
+				}
 				break
 			}
 		}
@@ -235,18 +254,33 @@ func main() {
 
 	applyBtn.OnTapped = func() { save(); clearFocus(); configContainer.Hide() }
 	configToggle.OnTapped = func() {
-		if configContainer.Hidden { configContainer.Show() } else { configContainer.Hide(); save(); clearFocus() }
+		if configContainer.Hidden {
+			configContainer.Show()
+		} else {
+			configContainer.Hide()
+			save()
+			clearFocus()
+		}
 	}
 
 	if d, err := os.ReadFile(configFile); err == nil {
 		var c Config
 		if json.Unmarshal(d, &c) == nil {
-			if c.Addr != "" { addrEntry.SetText(c.Addr) }
-			if c.Port != "" { portEntry.SetText(c.Port) }
+			if c.Addr != "" {
+				addrEntry.SetText(c.Addr)
+			}
+			if c.Port != "" {
+				portEntry.SetText(c.Port)
+			}
 			shortcutsOn = c.Keys
-			for i, v := range c.Cmds { if i < 16 { entries[i].SetText(v) } }
-			if shortcutsOn { 
-				modeBtn.SetText("Keys: ON"); modeBtn.Importance = widget.SuccessImportance 
+			for i, v := range c.Cmds {
+				if i < 16 {
+					entries[i].SetText(v)
+				}
+			}
+			if shortcutsOn {
+				modeBtn.SetText("Keys: ON")
+				modeBtn.Importance = widget.SuccessImportance
 				refreshButtonLabels()
 			}
 		}
@@ -256,22 +290,22 @@ func main() {
 
 	header := container.NewVBox(
 		container.NewHBox(
-			saveBtn, 
-			widget.NewLabelWithStyle("SK8-PAD "+version, fyne.TextAlignLeading, fyne.TextStyle{Bold: true}), 
-			saveLabel, 
-			layout.NewSpacer(), 
-			modeBtn, 
-			viewBtn, 
+			saveBtn,
+			widget.NewLabelWithStyle("SK8-PAD "+version, fyne.TextAlignLeading, fyne.TextStyle{Bold: true}),
+			saveLabel,
+			layout.NewSpacer(),
+			modeBtn,
+			viewBtn,
 			configToggle,
 		),
 		configContainer,
 	)
 
 	w.SetContent(container.NewBorder(
-		header, 
-		container.NewPadded(adhocBar), 
-		nil, 
-		nil, 
+		header,
+		container.NewPadded(adhocBar),
+		nil,
+		nil,
 		container.NewPadded(grid),
 	))
 
