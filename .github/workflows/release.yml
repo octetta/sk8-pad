@@ -36,7 +36,7 @@ jobs:
         with:
           distribution: goreleaser
           version: "~> v2"
-          args: release --clean
+          args: release --clean --config ../../.goreleaser.yaml
           # CRITICAL: This tells GoReleaser to run inside your src folder
           workdir: src/sk8-pad
         env:
