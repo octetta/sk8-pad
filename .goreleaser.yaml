@@ -1,19 +1,40 @@
-# Put this in sk8-pad/.goreleaser.yaml
 version: 2
 project_name: sk8-pad
 
 builds:
-  - env:
+  - id: linux_windows
+    main: .
+    env:
       - CGO_ENABLED=1
-    # Since 'workdir' in GitHub Action is 'src/sk8-pad', 
-    # the 'main' path is just the current directory.
-    main: . 
     goos:
       - linux
       - windows
+    goarch:
+      - amd64 # Removed arm64 here to stop the Assembler errors
+    ldflags:
+      - -s -w -X main.version={{.Version}}
+
+  - id: macos
+    main: .
+    env:
+      - CGO_ENABLED=1
+    goos:
       - darwin
     goarch:
       - amd64
-      - arm64
+      - arm64 # Works here because the Runner is an actual Mac
     ldflags:
       - -s -w -X main.version={{.Version}}
+
+archives:
+  - format: tar.gz
+    format_overrides:
+      - goos: windows
+        format: zip
+    name_template: "sk8-pad_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+
+checksum:
+  name_template: 'checksums.txt'
+
+changelog:
+  sort: asc

@@ -82,9 +82,12 @@ func (e *HistoryEntry) TypedKey(k *fyne.KeyEvent) {
 	}
 }
 
+// This variable is populated by the -X ldflag in goreleaser
+var version = "dev"
+
 func main() {
 	myApp := app.NewWithID("com.sk8r.pad")
-	w := myApp.NewWindow("SK8-PAD")
+	w := myApp.NewWindow("SK8-PAD "+version)
 
 	var shortcutsOn bool
 	var fieldsVisible = true
@@ -254,7 +257,7 @@ func main() {
 	header := container.NewVBox(
 		container.NewHBox(
 			saveBtn, 
-			widget.NewLabelWithStyle("SK8-PAD", fyne.TextAlignLeading, fyne.TextStyle{Bold: true}), 
+			widget.NewLabelWithStyle("SK8-PAD "+version, fyne.TextAlignLeading, fyne.TextStyle{Bold: true}), 
 			saveLabel, 
 			layout.NewSpacer(), 
 			modeBtn, 
