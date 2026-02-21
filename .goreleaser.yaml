@@ -4,27 +4,17 @@ project_name: sk8-pad
 builds:
   - id: linux_windows
     main: .
-    env:
-      - CGO_ENABLED=1
-    goos:
-      - linux
-      - windows
-    goarch:
-      - amd64 # Removed arm64 here to stop the Assembler errors
-    ldflags:
-      - -s -w -X main.version={{.Version}}
+    env: [CGO_ENABLED=1]
+    goos: [linux, windows]
+    goarch: [amd64]
+    ldflags: [-s -w -X main.version={{.Version}}]
 
   - id: macos
     main: .
-    env:
-      - CGO_ENABLED=1
-    goos:
-      - darwin
-    goarch:
-      - amd64
-      - arm64 # Works here because the Runner is an actual Mac
-    ldflags:
-      - -s -w -X main.version={{.Version}}
+    env: [CGO_ENABLED=1]
+    goos: [darwin]
+    goarch: [amd64, arm64]
+    ldflags: [-s -w -X main.version={{.Version}}]
 
 archives:
   - format: tar.gz
@@ -35,6 +25,3 @@ archives:
 
 checksum:
   name_template: 'checksums.txt'
-
-changelog:
-  sort: asc
