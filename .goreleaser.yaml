@@ -1,0 +1,19 @@
+# Put this in sk8-pad/.goreleaser.yaml
+version: 2
+project_name: sk8-pad
+
+builds:
+  - env:
+      - CGO_ENABLED=1
+    # Since 'workdir' in GitHub Action is 'src/sk8-pad', 
+    # the 'main' path is just the current directory.
+    main: . 
+    goos:
+      - linux
+      - windows
+      - darwin
+    goarch:
+      - amd64
+      - arm64
+    ldflags:
+      - -s -w -X main.version={{.Version}}
