@@ -15,3 +15,11 @@ make
 ```
 
 <img src="docs/cap.png" width="500">
+
+## Download Latest Version
+
+| Platform | Download |
+| :--- | :--- |
+| **Windows (64-bit)** | [wnload .zip](https://github.com/octetta/sk8-pad/releases/latest/download/sk8-pad_windows_amd64.zip) |
+| **macOS (Intel/Apple Silicon)** | [wnload .tar.gz](https://github.com/octetta/sk8-pad/releases/latest/download/sk8-pad_darwin_all.tar.gz) |
+| **Linux (64-bit)** | [wnload .tar.gz](https://github.com/octetta/sk8-pad/releases/latest/download/sk8-pad_linux_amd64.tar.gz) |

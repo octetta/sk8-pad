@@ -9,7 +9,7 @@ permissions:
   contents: write
 
 jobs:
-  goreleaser:
+  build:
     strategy:
       matrix:
         include:
@@ -31,13 +31,13 @@ jobs:
           cache: true
           cache-dependency-path: src/sk8-pad/go.sum
 
-      - name: Install Linux Dependencies
+      - name: Install Dependencies
         if: matrix.os == 'ubuntu-latest'
         run: |
           sudo apt-get update
-          sudo apt-get install -y libx11-dev libxcursor-dev libxrandr-dev libxinerama-dev libxi-dev libgl1-mesa-dev libxxf86vm-dev
+          sudo apt-get install -y libx11-dev libxcursor-dev libxrandr-dev libxinerama-dev libxi-dev libgl1-mesa-dev libxxf86vm-dev gcc-mingw-w64-x86-64
 
-      - name: Run GoReleaser
+      - name: Run GoReleaser (Build Only)
         uses: goreleaser/goreleaser-action@v6
         with:
           distribution: goreleaser
@@ -46,3 +46,29 @@ jobs:
           workdir: src/sk8-pad
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: binaries-${{ matrix.os }}
+          path: src/sk8-pad/dist/*
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: all-binaries
+          pattern: binaries-*
+          merge-multiple: true
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            all-binaries/*.tar.gz
+            all-binaries/*.zip
+            all-binaries/checksums.txt
+          generate_release_notes: true
